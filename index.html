@@ -1082,10 +1082,8 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
           <div class="set-sub" style="font-size:10px;color:var(--subtext);line-height:1.6;">
             Subh Prayer: <b style="color:var(--accent)">20pts</b> &nbsp;·&nbsp; No Mindless Scrolling: <b style="color:var(--accent)">12pts</b><br>
             Focus in Class: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Create Something: <b style="color:var(--accent)">10pts</b><br>
-            Design Practice: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Video Editing: <b style="color:var(--accent)">8pts</b><br>
             Slept before 10:30: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Woke for Subh: <b style="color:var(--accent)">5pts</b><br>
-            Read 10 pages: <b style="color:var(--accent)">5pts</b> &nbsp;·&nbsp; English Practice: <b style="color:var(--accent)">5pts</b><br>
-            Drink 3L Water: <b style="color:var(--accent)">5pts</b><br>
+            Read 10 pages: <b style="color:var(--accent)">5pts</b> &nbsp;·&nbsp; Drink 3L Water: <b style="color:var(--accent)">5pts</b><br>
             <span style="color:var(--purple)">Growth habits: bonus only, not in score</span>
           </div>
         </div>
@@ -1260,10 +1258,7 @@ const HABITS = [
   { id:'scroll',  name:'No Mindless Scrolling', emoji:'📵', meta:'Protect your focus',           w:12 },
   { id:'focus',   name:'Focus in Class',        emoji:'📚', meta:'Full presence, no phone',      w:10 },
   { id:'create',  name:'Create Something',      emoji:'✨', meta:'Ship daily',                   w:10 },
-  { id:'design',  name:'Design Practice',       emoji:'🎨', meta:'Mora Studio sharpens',         w:10 },
-  { id:'video',   name:'Video Editing Practice',emoji:'🎬', meta:'CapCut → Premiere',            w:8  },
   { id:'read',    name:'Read 10 Pages',         emoji:'📖', meta:'Books > reels',                w:5  },
-  { id:'english', name:'English Practice',      emoji:'🗣️', meta:'Level up comms',              w:5  },
   { id:'water',   name:'Drink 3L Water',        emoji:'💧', meta:'Hydrate to elevate',           w:5  },
 ];
 const SLEEP = [
@@ -1280,8 +1275,9 @@ const GROWTH = [
   { id:'ideas',    name:'Save New Ideas',           emoji:'💡', meta:'Capture everything'     },
   { id:'eduvid',   name:'Educational Video',        emoji:'🎓', meta:'Learn something real'   },
   { id:'word',     name:'Learn New Word',           emoji:'🔤', meta:'Expand your world'      },
-  { id:'convo',    name:'Meaningful Conversation',  emoji:'🤝', meta:'Depth over surface'     },
-  { id:'reflect',  name:'Reflection Time',          emoji:'🪞', meta:'Know thyself'            },
+  { id:'design',   name:'Design Practice',          emoji:'🎨', meta:'Mora Studio sharpens'   },
+  { id:'video',    name:'Video Editing Practice',   emoji:'🎬', meta:'CapCut → Premiere'      },
+  { id:'english',  name:'English Practice',         emoji:'🗣️', meta:'Level up comms'         },
 ];
 
 const SCORED = [...HABITS, ...SLEEP]; // Growth excluded from score
