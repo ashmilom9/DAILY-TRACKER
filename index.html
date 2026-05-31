@@ -120,6 +120,15 @@ body::after {
 .quote-card {
   background:var(--card); border:1px solid var(--border); border-left:3px solid var(--accent);
   border-radius:14px; padding:16px 18px; margin-bottom:18px;
+  cursor: pointer; transition: background-color 0.2s, opacity 0.2s, transform 0.2s;
+  user-select: none;
+}
+.quote-card:active {
+  background: var(--card2);
+  transform: scale(0.99);
+}
+.quote-card.fade-out {
+  opacity: 0;
 }
 .q-text { font-size:14px; line-height:1.65; color:var(--text); font-weight:300; font-style:italic; }
 .q-auth { font-family:var(--fm); font-size:9px; color:var(--accent); letter-spacing:2px; text-transform:uppercase; margin-top:8px; }
@@ -373,18 +382,6 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 }
 .cta-btn:active { opacity:0.8; }
 .cta-btn.red { background:#ff3b3b; color:#fff; }
-
-/* FUEL */
-.fuel-list { display:flex; flex-direction:column; gap:10px; }
-.fuel-card { border-radius:16px; padding:18px; border:1px solid var(--border); position:relative; overflow:hidden; }
-.fuel-card::after { content:attr(data-e); position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:34px; opacity:0.12; }
-.fuel-type { font-family:var(--fm); font-size:9px; color:var(--subtext); letter-spacing:3px; text-transform:uppercase; margin-bottom:7px; }
-.fuel-text { font-size:13px; line-height:1.65; color:var(--text); font-weight:300; }
-.fc-fire { background:linear-gradient(135deg,#1a0500,#0e0200); border-color:#2a0c00; }
-.fc-deen { background:linear-gradient(135deg,#001220,#000c18); border-color:#002240; }
-.fc-grind { background:linear-gradient(135deg,#0c1200,#080e00); border-color:#182400; }
-.fc-mind { background:linear-gradient(135deg,#12001a,#0b0012); border-color:#240038; }
-
 /* SETTINGS */
 .set-block { margin-bottom:24px; }
 .set-block-title { font-family:var(--fh); font-size:17px; letter-spacing:2px; margin-bottom:10px; color:var(--subtext); }
@@ -920,7 +917,7 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 
     <!-- TODAY -->
     <div class="page active" id="page-today">
-      <div class="quote-card">
+      <div class="quote-card" onclick="renderQuote(true)">
         <div class="q-text" id="qText"></div>
         <div class="q-auth" id="qAuth"></div>
       </div>
@@ -1037,13 +1034,6 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
         <button class="cta-btn" onclick="saveLog()">SAVE LOG</button>
       </div>
     </div>
-
-    <!-- FUEL -->
-    <div class="page" id="page-fuel">
-      <div class="sec-head" style="margin-top:0"><div class="sec-title">FUEL</div><div class="sec-badge badge-habits">MOTIVATION</div></div>
-      <div class="fuel-list" id="fuelList"></div>
-    </div>
-
     <!-- SETTINGS -->
     <div class="page" id="page-settings">
       <div class="sec-head" style="margin-top:0"><div class="sec-title">SETTINGS</div></div>
@@ -1080,10 +1070,10 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
         <div class="set-block-title">SCORE WEIGHTS</div>
         <div class="set-item" style="flex-direction:column;align-items:stretch;gap:6px;">
           <div class="set-sub" style="font-size:10px;color:var(--subtext);line-height:1.6;">
-            Subh Prayer: <b style="color:var(--accent)">20pts</b> &nbsp;·&nbsp; No Mindless Scrolling: <b style="color:var(--accent)">12pts</b><br>
-            Focus in Class: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Create Something: <b style="color:var(--accent)">10pts</b><br>
-            Slept before 10:30: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Woke for Subh: <b style="color:var(--accent)">5pts</b><br>
-            Read 10 pages: <b style="color:var(--accent)">5pts</b> &nbsp;·&nbsp; Drink 3L Water: <b style="color:var(--accent)">5pts</b><br>
+            Subh Prayer: <b style="color:var(--accent)">26pts</b> &nbsp;·&nbsp; No Mindless Scrolling: <b style="color:var(--accent)">16pts</b><br>
+            Focus in Class: <b style="color:var(--accent)">13pts</b> &nbsp;·&nbsp; Create Something: <b style="color:var(--accent)">13pts</b><br>
+            Slept before 10:30: <b style="color:var(--accent)">13pts</b> &nbsp;·&nbsp; Woke for Subh: <b style="color:var(--accent)">7pts</b><br>
+            Read 10 pages: <b style="color:var(--accent)">6pts</b> &nbsp;·&nbsp; Drink 3L Water: <b style="color:var(--accent)">6pts</b><br>
             <span style="color:var(--purple)">Growth habits: bonus only, not in score</span>
           </div>
         </div>
@@ -1205,10 +1195,7 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       Log
     </button>
-    <button class="bn-btn" onclick="showPage('fuel',this)">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      Fuel
-    </button>
+
     <button class="bn-btn" onclick="showPage('settings',this)">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       Setup
@@ -1254,16 +1241,16 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 // Weights add to 100 for scored habits. Growth = bonus only.
 
 const HABITS = [
-  { id:'subh',    name:'Subh Prayer',          emoji:'🕌', meta:'Start with Allah',             w:20 },
-  { id:'scroll',  name:'No Mindless Scrolling', emoji:'📵', meta:'Protect your focus',           w:12 },
-  { id:'focus',   name:'Focus in Class',        emoji:'📚', meta:'Full presence, no phone',      w:10 },
-  { id:'create',  name:'Create Something',      emoji:'✨', meta:'Ship daily',                   w:10 },
-  { id:'read',    name:'Read 10 Pages',         emoji:'📖', meta:'Books > reels',                w:5  },
-  { id:'water',   name:'Drink 3L Water',        emoji:'💧', meta:'Hydrate to elevate',           w:5  },
+  { id:'subh',    name:'Subh Prayer',          emoji:'🕌', meta:'Start with Allah',             w:26 },
+  { id:'scroll',  name:'No Mindless Scrolling', emoji:'📵', meta:'Protect your focus',           w:16 },
+  { id:'focus',   name:'Focus in Class',        emoji:'📚', meta:'Full presence, no phone',      w:13 },
+  { id:'create',  name:'Create Something',      emoji:'✨', meta:'Ship daily',                   w:13 },
+  { id:'read',    name:'Read 10 Pages',         emoji:'📖', meta:'Books > reels',                w:6  },
+  { id:'water',   name:'Drink 3L Water',        emoji:'💧', meta:'Hydrate to elevate',           w:6  },
 ];
 const SLEEP = [
-  { id:'sleep_early', name:'Slept Before 10:30 PM', emoji:'🌙', meta:'Sleep is a weapon',     w:10 },
-  { id:'woke_subh',   name:'Woke Up for Subh',      emoji:'⏰', meta:'First win of the day',  w:5 },
+  { id:'sleep_early', name:'Slept Before 10:30 PM', emoji:'🌙', meta:'Sleep is a weapon',     w:13 },
+  { id:'woke_subh',   name:'Woke Up for Subh',      emoji:'⏰', meta:'First win of the day',  w:7  },
 ];
 // Fix: ensure HABITS weights + SLEEP weights = 100
 // Current: 20+12+10+10+10+8+8+5+5+8 = 96, + sleep 8+4 = 108 — let's normalise
@@ -1298,16 +1285,6 @@ const QUOTES = [
   { t:"Every reel you don't make is a client you don't get.", a:"Mora Studio" },
 ];
 
-const FUEL = [
-  { type:'fire',  e:'🔥', lbl:'REMINDER',      txt:'Your future self is watching every decision you make right now. Make him proud.' },
-  { type:'deen',  e:'🕌', lbl:'DEEN FIRST',    txt:'Your Subh prayer is your anchor. When you win the morning with Allah, the rest follows. Non-negotiable.' },
-  { type:'grind', e:'⚡', lbl:'MOMENTUM',      txt:"You don't need motivation. You need to start. Motivation follows action, not the other way around." },
-  { type:'mind',  e:'📵', lbl:'PHONE WARNING', txt:'Every time you scroll mindlessly, you are trading your future for someone else\'s content. Stop. Create instead.' },
-  { type:'fire',  e:'🎨', lbl:'MORA STUDIO',   txt:'Mora Studio is built by who you are daily — not weekly, not monthly. Daily. Every habit is a brick in your brand.' },
-  { type:'grind', e:'💀', lbl:'BRUTAL TRUTH',  txt:'The designers you admire didn\'t get good scrolling. They got good doing the reps. Every. Single. Day.' },
-  { type:'deen',  e:'🌙', lbl:'NIGHT AUDIT',   txt:'Before you sleep — did you earn today? Did you do what you said you would? The answer shapes who you become.' },
-  { type:'mind',  e:'📈', lbl:'COMPOUND',      txt:'30 days of discipline will make you unrecognizable — not to others, but to yourself. That is the real reward.' },
-];
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -1432,7 +1409,6 @@ function calcScoreBreakdown(key) {
 function init() {
   renderQuote();
   renderHabits();
-  renderFuel();
   updateTopBar();
   updateStats();
   renderHeatmap();
@@ -1458,10 +1434,28 @@ function updateTopBar() {
 }
 
 // ─── QUOTE ─────────────────────────────────────────────────────────────────────
-function renderQuote() {
-  const q = QUOTES[new Date().getDate() % QUOTES.length];
-  document.getElementById('qText').textContent = `"${q.t}"`;
-  document.getElementById('qAuth').textContent = `— ${q.a}`;
+function renderQuote(animate = false) {
+  const card = document.querySelector('.quote-card');
+  if (animate && card) {
+    card.classList.add('fade-out');
+    setTimeout(() => {
+      let q;
+      const currentText = document.getElementById('qText').textContent;
+      let attempts = 0;
+      do {
+        q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+        attempts++;
+      } while (`"${q.t}"` === currentText && attempts < 10);
+      
+      document.getElementById('qText').textContent = `"${q.t}"`;
+      document.getElementById('qAuth').textContent = `— ${q.a}`;
+      card.classList.remove('fade-out');
+    }, 200);
+  } else {
+    const q = QUOTES[new Date().getDate() % QUOTES.length];
+    document.getElementById('qText').textContent = `"${q.t}"`;
+    document.getElementById('qAuth').textContent = `— ${q.a}`;
+  }
 }
 
 // ─── HABITS RENDER ─────────────────────────────────────────────────────────────
@@ -2267,19 +2261,6 @@ window.addEventListener('afterprint', () => {
   const vpMeta = document.querySelector('meta[name="viewport"]');
   if (vpMeta) vpMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
 });
-
-// ─── FUEL ──────────────────────────────────────────────────────────────────────
-function renderFuel() {
-  const el = document.getElementById('fuelList');
-  el.innerHTML = '';
-  FUEL.forEach(f => {
-    const c = document.createElement('div');
-    c.className = `fuel-card fc-${f.type}`;
-    c.setAttribute('data-e', f.e);
-    c.innerHTML = `<div class="fuel-type">${f.lbl}</div><div class="fuel-text">${f.txt}</div>`;
-    el.appendChild(c);
-  });
-}
 
 // ─── SETTINGS ──────────────────────────────────────────────────────────────────
 
