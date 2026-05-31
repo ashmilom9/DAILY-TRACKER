@@ -466,7 +466,7 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="tb-logo">RISE</div>
+    <div class="tb-logo" onclick="refreshApp()" style="cursor: pointer; user-select: none;">RISE</div>
     <div class="tb-right" onclick="openDatePicker()">
       <div class="tb-month" id="tbMonth">—</div>
       <div class="tb-day" id="tbDay">TAP TO CHANGE DATE ›</div>
@@ -1358,6 +1358,13 @@ function resetAll() {
   state.data = {}; save();
   viewKey = todayKey();
   init(); showToast('Fresh start. Go. 🔥');
+}
+
+function refreshApp() {
+  showPage('today', document.querySelector('.bn-btn'));
+  selectDate(todayKey());
+  syncFromCloud();
+  showToast("⚡ REFRESHED");
 }
 
 // ─── NAV ───────────────────────────────────────────────────────────────────────
