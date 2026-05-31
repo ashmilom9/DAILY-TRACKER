@@ -272,6 +272,100 @@ input[type=range].r-weight::-webkit-slider-thumb { -webkit-appearance:none; appe
 input[type=range].r-mood::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:18px; height:18px; background:var(--accent2); border-radius:50%; cursor:pointer; }
 input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:18px; height:18px; background:var(--accent); border-radius:50%; cursor:pointer; }
 
+/* Weight Scroll Picker */
+.weight-picker {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.weight-picker-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.weight-picker-label {
+  font-family: var(--fm); font-size: 9px; color: var(--subtext); letter-spacing: 2px; text-transform: uppercase;
+}
+.weight-picker-value {
+  font-family: var(--fh); font-size: 28px; color: var(--accent3); line-height: 1;
+  transition: transform 0.1s ease;
+}
+.weight-picker-value.bump { transform: scale(1.15); }
+.weight-picker-unit {
+  font-family: var(--fm); font-size: 10px; color: var(--subtext); margin-left: 3px;
+}
+.weight-scroll-track {
+  position: relative; height: 54px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  cursor: grab; touch-action: none; user-select: none;
+}
+.weight-scroll-track:active { cursor: grabbing; }
+.weight-scroll-inner {
+  display: flex; align-items: center; height: 100%; will-change: transform;
+  transition: transform 0.08s linear;
+}
+.weight-tick {
+  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+  width: 28px; transition: opacity 0.2s, transform 0.2s;
+}
+.weight-tick-line {
+  width: 2px; border-radius: 1px; background: var(--border); transition: height 0.2s, background 0.2s;
+}
+.weight-tick.major .weight-tick-line { height: 28px; background: var(--subtext); }
+.weight-tick.minor .weight-tick-line { height: 14px; }
+.weight-tick.active .weight-tick-line { background: var(--accent3) !important; height: 34px; width: 3px; }
+.weight-tick-num {
+  font-family: var(--fm); font-size: 8px; color: var(--subtext); margin-top: 4px;
+  opacity: 0; transition: opacity 0.2s;
+}
+.weight-tick.major .weight-tick-num { opacity: 1; }
+.weight-tick.active .weight-tick-num { color: var(--accent3); opacity: 1; font-weight: bold; }
+.weight-center-line {
+  position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
+  background: var(--accent3); transform: translateX(-50%); z-index: 2;
+  box-shadow: 0 0 8px rgba(200,245,90,0.3);
+}
+.weight-center-arrow {
+  position: absolute; left: 50%; top: -2px; transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--accent3);
+  z-index: 3;
+}
+
+/* Stepper Control (Sleep Hours) */
+.stepper-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 12px;
+}
+.stepper-label {
+  font-family: var(--fm); font-size: 9px; color: var(--subtext); letter-spacing: 2px; text-transform: uppercase;
+}
+.stepper-controls {
+  display: flex; align-items: center; gap: 0;
+}
+.stepper-btn {
+  width: 36px; height: 36px; border: 1px solid var(--border); background: var(--card);
+  color: var(--text); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.stepper-btn:first-child { border-radius: 8px 0 0 8px; }
+.stepper-btn:last-child { border-radius: 0 8px 8px 0; }
+.stepper-btn:active { background: var(--accent); color: #000; transform: scale(0.92); }
+.stepper-val {
+  width: 56px; height: 36px; text-align: center;
+  font-family: var(--fh); font-size: 17px; color: var(--accent2);
+  background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  border-left: none; border-right: none;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+
 .cta-btn {
   width:100%; padding:15px; background:var(--accent); color:#000;
   border:none; border-radius:13px; font-family:var(--fh); font-size:17px;
@@ -401,6 +495,182 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 .dd-log-text-desc { font-family: var(--fb); font-size: 13px; color: var(--text); line-height: 1.5; white-space: pre-wrap; }
 
 .dd-actions { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; flex-shrink:0; }
+
+/* ─── PRINT SYSTEM ────────────────────────────────────────────────────────────── */
+#printReportArea { display: none; }
+
+.pr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid #202020;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+.pr-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: #c8f55a;
+  line-height: 1;
+}
+.pr-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: #777;
+  letter-spacing: 1px;
+}
+.pr-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+.pr-stat-card {
+  background: #141414;
+  border: 1px solid #202020;
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+}
+.pr-stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: #777;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.pr-stat-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: #efefef;
+}
+.pr-table {
+  width: 100%;
+  border: 1px solid #202020;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #101010;
+}
+.pr-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  border-bottom: 1px solid #202020;
+  padding: 12px 16px;
+  align-items: center;
+}
+.pr-row:last-child {
+  border-bottom: none;
+}
+.pr-thead {
+  background: #141414;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #777;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+.pr-tbody .pr-row {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #efefef;
+}
+.pr-tbody .pr-row:nth-child(even) {
+  background: #121212;
+}
+.pr-col-date {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+}
+.pr-col-score {
+  font-family: 'DM Mono', monospace;
+  color: #c8f55a;
+  font-weight: bold;
+}
+.pr-col-habits {
+  color: var(--accent);
+  font-family: 'DM Mono', monospace;
+}
+.pr-col-sleep {
+  color: var(--accent2);
+  font-family: 'DM Mono', monospace;
+}
+.pr-col-growth {
+  color: var(--purple);
+  font-family: 'DM Mono', monospace;
+}
+
+@media print {
+  @page {
+    margin: 0;
+  }
+  html, body {
+    background: #080808 !important;
+    background-color: #080808 !important;
+    color: #efefef !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    min-height: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  
+  body.printing-report #app,
+  body.printing-report #datePicker,
+  body.printing-report #dayDetails,
+  body.printing-report #splash,
+  body.printing-report .toast,
+  body.printing-report .cpiece {
+    display: none !important;
+  }
+  
+  body.printing-report #printReportArea {
+    display: block !important;
+    background: #080808 !important;
+    background-color: #080808 !important;
+    color: #efefef !important;
+    padding: 30px !important;
+    min-height: 100% !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  body.printing-report .pr-stat-card {
+    background: #141414 !important;
+    border: 1px solid #202020 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.printing-report .pr-table {
+    background: #101010 !important;
+    border: 1px solid #202020 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.printing-report .pr-row {
+    border-bottom: 1px solid #202020 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.printing-report .pr-thead {
+    background: #141414 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.printing-report .pr-tbody .pr-row:nth-child(even) {
+    background: #121212 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.printing-report .pr-title {
+    color: #c8f55a !important;
+  }
+}
 </style>
 <!-- Firebase SDKs (compat mode) -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -414,6 +684,8 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
   <div class="s-sub">Daily Habit Tracker · Ashmil</div>
   <div class="s-track"><div class="s-fill"></div></div>
 </div>
+
+
 
 <!-- DATE PICKER -->
 <div id="datePicker">
@@ -573,17 +845,19 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
         <div class="sec-badge badge-habits" id="logDayLabel">—</div>
       </div>
       <div class="log-card">
-        <div class="slider-row">
-          <div class="slider-top"><span class="sl-name">⚖️ Weight (kg)</span><span class="sl-val v-weight" id="wVal">70</span></div>
-          <input type="range" class="r-weight" id="wSlider" min="40" max="120" value="70">
+        <div class="weight-picker" id="weightPicker">
+          <div class="weight-picker-header">
+            <span class="weight-picker-label">⚖️ WEIGHT (KG)</span>
+            <div><span class="weight-picker-value" id="wVal">70.0</span><span class="weight-picker-unit">kg</span></div>
+          </div>
+          <div class="weight-scroll-track" id="weightTrack">
+            <div class="weight-center-arrow"></div>
+            <div class="weight-center-line"></div>
+            <div class="weight-scroll-inner" id="weightScrollInner"></div>
+          </div>
         </div>
-        <div class="slider-row">
-          <div class="slider-top"><span class="sl-name">😌 Mood</span><span class="sl-val v-mood" id="mVal">5</span></div>
-          <input type="range" class="r-mood" id="mSlider" min="1" max="10" value="5">
-        </div>
-        <div class="slider-row">
-          <div class="slider-top"><span class="sl-name">💪 Confidence</span><span class="sl-val v-conf" id="cVal">5</span></div>
-          <input type="range" class="r-conf" id="cSlider" min="1" max="10" value="5">
+        <div id="customTrackersLogFields" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px;">
+          <!-- Dynamically populated -->
         </div>
         <div class="log-grid">
           <div class="lf"><label>Biggest Weakness</label><input id="lWeak" placeholder="Be honest..."></div>
@@ -605,24 +879,33 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
       <div class="sec-head" style="margin-top:0"><div class="sec-title">SETTINGS</div></div>
       <div class="set-block">
         <div class="set-block-title">PROFILE</div>
-        <div class="set-item" style="flex-direction:column;align-items:stretch;gap:10px;">
-          <div class="set-name">Your Name</div>
-          <input class="name-inp" id="nameInp" placeholder="Ashmil">
-          <button class="cta-btn" onclick="saveName()">SAVE</button>
-        </div>
-      </div>
-      <div class="set-block">
-        <div class="set-block-title" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none;" onclick="toggleDangerZone()">
-          <span>DANGER ZONE</span>
-          <span id="dangerZoneArrow" style="font-family: var(--fm); font-size: 10px; color: var(--subtext); letter-spacing: 1px;">TAP TO SHOW ›</span>
-        </div>
-        <div id="dangerZoneContent" style="display: none;">
-          <div class="set-item" style="border-color: rgba(255, 85, 85, 0.2);">
-            <div><div class="set-name" style="color: #ff5555;">Reset All Data</div><div class="set-sub">Wipes everything — cannot undo</div></div>
-            <button class="small-btn sb-danger" onclick="resetAll()">RESET</button>
+        <div class="set-item" style="padding: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <div>
+              <div class="set-name" style="font-size: 16px; color: var(--accent);">Ashmil Omar</div>
+              <div style="font-family: var(--fm); font-size: 10px; color: var(--subtext); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase;">RISE · DAILY TRACKER</div>
+            </div>
+            <span style="font-size: 28px;">👤</span>
           </div>
         </div>
       </div>
+      <div class="set-block">
+        <div class="set-block-title">CUSTOM TRACKERS (MAX 3)</div>
+        <div class="set-item" style="flex-direction: column; align-items: stretch; gap: 14px;">
+          <div>
+            <div class="set-name">Manage Trackers</div>
+            <div class="set-sub">Add up to 3 custom text/number metrics to log daily and include in reports</div>
+          </div>
+          <div id="customTrackersList" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Dynamic list of trackers -->
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <input class="name-inp" id="newTrackerInp" placeholder="e.g. Gym, Sleep Hours" style="margin-bottom: 0; flex: 1;">
+            <button class="small-btn sb-accent" onclick="addCustomTracker()" style="padding: 0 16px; height: 38px;">ADD</button>
+          </div>
+        </div>
+      </div>
+
       <div class="set-block">
         <div class="set-block-title">SCORE WEIGHTS</div>
         <div class="set-item" style="flex-direction:column;align-items:stretch;gap:6px;">
@@ -630,11 +913,33 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
             Subh Prayer: <b style="color:var(--accent)">20pts</b> &nbsp;·&nbsp; No Mindless Scrolling: <b style="color:var(--accent)">12pts</b><br>
             Focus in Class: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Create Something: <b style="color:var(--accent)">10pts</b><br>
             Design Practice: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Video Editing: <b style="color:var(--accent)">8pts</b><br>
-            Workout: <b style="color:var(--accent)">8pts</b> &nbsp;·&nbsp; Slept before 10:30: <b style="color:var(--accent)">8pts</b><br>
-            Woke for Subh: <b style="color:var(--accent)">7pts</b> &nbsp;·&nbsp; Read 10 pages: <b style="color:var(--accent)">5pts</b><br>
-            English Practice: <b style="color:var(--accent)">5pts</b> &nbsp;·&nbsp; Drink 3L Water: <b style="color:var(--accent)">5pts</b><br>
+            Slept before 10:30: <b style="color:var(--accent)">10pts</b> &nbsp;·&nbsp; Woke for Subh: <b style="color:var(--accent)">5pts</b><br>
+            Read 10 pages: <b style="color:var(--accent)">5pts</b> &nbsp;·&nbsp; English Practice: <b style="color:var(--accent)">5pts</b><br>
+            Drink 3L Water: <b style="color:var(--accent)">5pts</b><br>
             <span style="color:var(--purple)">Growth habits: bonus only, not in score</span>
           </div>
+        </div>
+      </div>
+      <div class="set-block">
+        <div class="set-block-title">EXPORT DATA</div>
+        <div class="set-item" style="flex-direction: column; align-items: stretch; gap: 14px;">
+          <div>
+            <div class="set-name">Generate Report</div>
+            <div class="set-sub">Select date range to compile and print your journal logs and completed habits</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="lf">
+              <label style="font-family: var(--fm); font-size: 8px; color: var(--subtext); letter-spacing: 1px;">FROM DATE</label>
+              <input type="date" id="repFromDate" style="height: 38px; padding: 6px 10px; font-family: var(--fm); font-size: 11px;">
+            </div>
+            <div class="lf">
+              <label style="font-family: var(--fm); font-size: 8px; color: var(--subtext); letter-spacing: 1px;">TO DATE</label>
+              <input type="date" id="repToDate" style="height: 38px; padding: 6px 10px; font-family: var(--fm); font-size: 11px;">
+            </div>
+          </div>
+          <button class="cta-btn" onclick="generateAndPrintReport()" style="padding: 12px; font-size: 15px; letter-spacing: 2px;">
+            🖨️ GENERATE & PRINT REPORT
+          </button>
         </div>
       </div>
       <div class="set-block">
@@ -676,6 +981,36 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 
 <div class="toast" id="toast"></div>
 
+<!-- PRINT REPORT CONTAINER -->
+<div id="printReportArea" style="display: none;">
+  <div class="pr-header">
+    <div class="pr-title">RISE REPORT</div>
+    <div class="pr-subtitle" id="prDateRange">—</div>
+  </div>
+  <div class="pr-stats-grid">
+    <div class="pr-stat-card">
+      <div class="pr-stat-lbl">AVG SCORE</div>
+      <div class="pr-stat-val" id="prAvgScore">0%</div>
+    </div>
+    <div class="pr-stat-card">
+      <div class="pr-stat-lbl">DAYS LOGGED</div>
+      <div class="pr-stat-val" id="prDaysLogged">0</div>
+    </div>
+    <div class="pr-stat-card">
+      <div class="pr-stat-lbl">PERFECT DAYS</div>
+      <div class="pr-stat-val" id="prPerfectDays">0</div>
+    </div>
+  </div>
+  
+  <div class="pr-table">
+    <div class="pr-row pr-thead" id="prThead">
+      <div class="pr-col pr-col-date">DATE</div>
+      <div class="pr-col pr-col-score">SCORE</div>
+    </div>
+    <div class="pr-tbody" id="prDaysList"></div>
+  </div>
+</div>
+
 <script>
 // ─── HABITS CONFIG ─────────────────────────────────────────────────────────────
 // Weights add to 100 for scored habits. Growth = bonus only.
@@ -687,14 +1022,13 @@ const HABITS = [
   { id:'create',  name:'Create Something',      emoji:'✨', meta:'Ship daily',                   w:10 },
   { id:'design',  name:'Design Practice',       emoji:'🎨', meta:'Mora Studio sharpens',         w:10 },
   { id:'video',   name:'Video Editing Practice',emoji:'🎬', meta:'CapCut → Premiere',            w:8  },
-  { id:'workout', name:'Workout',               emoji:'💪', meta:'Move your body',               w:8  },
   { id:'read',    name:'Read 10 Pages',         emoji:'📖', meta:'Books > reels',                w:5  },
   { id:'english', name:'English Practice',      emoji:'🗣️', meta:'Level up comms',              w:5  },
-  { id:'water',   name:'Drink 3L Water',        emoji:'💧', meta:'Hydrate to elevate',           w:5 +3 },
+  { id:'water',   name:'Drink 3L Water',        emoji:'💧', meta:'Hydrate to elevate',           w:5  },
 ];
 const SLEEP = [
-  { id:'sleep_early', name:'Slept Before 10:30 PM', emoji:'🌙', meta:'Sleep is a weapon',     w:8 },
-  { id:'woke_subh',   name:'Woke Up for Subh',      emoji:'⏰', meta:'First win of the day',  w:4 },
+  { id:'sleep_early', name:'Slept Before 10:30 PM', emoji:'🌙', meta:'Sleep is a weapon',     w:10 },
+  { id:'woke_subh',   name:'Woke Up for Subh',      emoji:'⏰', meta:'First win of the day',  w:5 },
 ];
 // Fix: ensure HABITS weights + SLEEP weights = 100
 // Current: 20+12+10+10+10+8+8+5+5+8 = 96, + sleep 8+4 = 108 — let's normalise
@@ -765,30 +1099,34 @@ try {
 // ─── STATE ─────────────────────────────────────────────────────────────────────
 let state = JSON.parse(localStorage.getItem('rise2_state') || '{}');
 if (!state.data) state.data = {}; // keyed by "YYYY-MM-DD"
-if (!state.name) state.name = 'Ashmil';
+state.name = 'Ashmil Omar'; // Single permanent user
+if (!state.customTrackers) state.customTrackers = ['Gym', 'Sleep Hours', 'Deep Work'];
 
 function save() {
   localStorage.setItem('rise2_state', JSON.stringify(state));
   if (db) {
-    db.collection("users").doc(state.name.toLowerCase() || "ashmil").set(state)
+    // Use a fixed document for the single user
+    db.collection("users").doc("ashmil").set(state)
       .catch(err => console.error("Error syncing to Firestore:", err));
   }
 }
 
 function syncFromCloud() {
   if (!db) return;
-  db.collection("users").doc(state.name.toLowerCase() || "ashmil").get()
+  db.collection("users").doc("ashmil").get()
     .then(doc => {
       if (doc.exists) {
         const cloudState = doc.data();
         if (cloudState && cloudState.data) {
           state = cloudState;
+          if (!state.customTrackers) state.customTrackers = ['Gym', 'Sleep Hours', 'Deep Work'];
           localStorage.setItem('rise2_state', JSON.stringify(state));
           
           renderHabits();
           updateStats();
           renderHeatmap();
           loadLog();
+          renderCustomTrackersList();
           
           showToast("☁️ Cloud sync complete");
         }
@@ -842,7 +1180,11 @@ function init() {
   updateStats();
   renderHeatmap();
   loadLog();
-  document.getElementById('nameInp').value = state.name;
+  renderCustomTrackersList();
+  const profileDisplay = document.getElementById('profileNameDisplay');
+  if (profileDisplay) {
+    profileDisplay.textContent = state.name.toUpperCase();
+  }
   syncFromCloud();
 }
 
@@ -1146,15 +1488,77 @@ function updateLogLabel() {
     d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}).toUpperCase();
 }
 
+function renderCustomTrackersLogFields() {
+  const container = document.getElementById('customTrackersLogFields');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  if (state.customTrackers.length === 0) {
+    container.innerHTML = `
+      <div style="font-family: var(--fm); font-size: 11px; color: var(--subtext); text-align: center; padding: 10px 0;">
+        NO CUSTOM TRACKERS ACTIVE. ADD THEM IN SETUP.
+      </div>
+    `;
+    return;
+  }
+  
+  state.customTrackers.forEach((tracker, idx) => {
+    const div = document.createElement('div');
+    if (tracker.toLowerCase() === 'gym') {
+      div.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; height: 44px; margin-bottom: 12px;";
+      div.innerHTML = `
+        <label style="font-family: var(--fm); font-size: 9px; color: var(--subtext); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0;">${tracker.toUpperCase()}</label>
+        <input type="checkbox" id="inp-tracker-${idx}" style="width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer;">
+      `;
+    } else if (tracker.toLowerCase().includes('sleep')) {
+      // Stepper UI for sleep hours
+      div.className = 'stepper-row';
+      div.innerHTML = `
+        <span class="stepper-label">🌙 ${tracker.toUpperCase()}</span>
+        <div class="stepper-controls">
+          <button type="button" class="stepper-btn" onclick="stepTracker(${idx}, -0.5)">−</button>
+          <div class="stepper-val" id="inp-tracker-${idx}" data-value="0">0</div>
+          <button type="button" class="stepper-btn" onclick="stepTracker(${idx}, 0.5)">+</button>
+        </div>
+      `;
+    } else {
+      div.className = 'lf';
+      div.innerHTML = `
+        <label>${tracker.toUpperCase()}</label>
+        <input type="text" id="inp-tracker-${idx}" placeholder="e.g. Leg Day, 8h">
+      `;
+    }
+    container.appendChild(div);
+  });
+}
+
 function loadLog() {
   const data = getDay(viewKey);
   const log = data.log || {};
-  document.getElementById('wSlider').value = log.weight||70;
-  document.getElementById('wVal').textContent = log.weight||70;
-  document.getElementById('mSlider').value = log.mood||5;
-  document.getElementById('mVal').textContent = log.mood||5;
-  document.getElementById('cSlider').value = log.conf||5;
-  document.getElementById('cVal').textContent = log.conf||5;
+  const custom = log.custom || {};
+  
+  const wt = parseFloat(log.weight) || 70;
+  currentWeight = wt;
+  document.getElementById('wVal').textContent = wt.toFixed(1);
+  scrollWeightTo(wt, false);
+  
+  renderCustomTrackersLogFields();
+  
+  state.customTrackers.forEach((tracker, idx) => {
+    const el = document.getElementById(`inp-tracker-${idx}`);
+    if (el) {
+      if (tracker.toLowerCase() === 'gym') {
+        el.checked = custom[tracker] === 'Yes';
+      } else if (tracker.toLowerCase().includes('sleep')) {
+        const sv = custom[tracker] || '0';
+        el.dataset.value = sv;
+        el.textContent = sv;
+      } else {
+        el.value = custom[tracker] || '';
+      }
+    }
+  });
+  
   document.getElementById('lWeak').value = log.weakness||'';
   document.getElementById('lWin').value = log.win||'';
   document.getElementById('lNotes').value = log.notes||'';
@@ -1164,25 +1568,135 @@ function loadLog() {
 function saveLog() {
   if (viewKey > todayKey()) { showToast("Can't log future days!"); return; }
   const data = getDay(viewKey);
+  
+  const custom = {};
+  state.customTrackers.forEach((tracker, idx) => {
+    const el = document.getElementById(`inp-tracker-${idx}`);
+    if (el) {
+      if (tracker.toLowerCase() === 'gym') {
+        custom[tracker] = el.checked ? 'Yes' : 'No';
+      } else if (tracker.toLowerCase().includes('sleep')) {
+        custom[tracker] = el.dataset.value || '0';
+      } else {
+        custom[tracker] = el.value;
+      }
+    }
+  });
+  
   data.log = {
-    weight: document.getElementById('wSlider').value,
-    mood: document.getElementById('mSlider').value,
-    conf: document.getElementById('cSlider').value,
+    weight: currentWeight.toFixed(1),
     weakness: document.getElementById('lWeak').value,
     win: document.getElementById('lWin').value,
     notes: document.getElementById('lNotes').value,
+    custom: custom
   };
   save();
   const d = parseKey(viewKey);
   showToast('✅ ' + d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}).toUpperCase() + ' SAVED');
 }
 
-// Sliders
-['w','m','c'].forEach(k => {
-  const sl = document.getElementById(k+'Slider');
-  const vl = document.getElementById(k+'Val');
-  sl.addEventListener('input', () => vl.textContent = sl.value);
-});
+// ─── WEIGHT SCROLL PICKER ──────────────────────────────────────────────────────
+let currentWeight = 70;
+const WEIGHT_MIN = 30;
+const WEIGHT_MAX = 150;
+const WEIGHT_STEP = 0.5;
+const TICK_WIDTH = 28; // px per 0.5kg tick — must match .weight-tick CSS width
+
+function buildWeightTicks() {
+  const inner = document.getElementById('weightScrollInner');
+  if (!inner) return;
+  inner.innerHTML = '';
+  for (let w = WEIGHT_MIN; w <= WEIGHT_MAX; w += WEIGHT_STEP) {
+    const tick = document.createElement('div');
+    const isWhole = w % 1 === 0;
+    const is5 = w % 5 === 0;
+    tick.className = 'weight-tick' + (is5 ? ' major' : ' minor');
+    tick.dataset.w = w;
+    tick.innerHTML = `<div class="weight-tick-line"></div>${is5 ? `<div class="weight-tick-num">${w}</div>` : ''}`;
+    inner.appendChild(tick);
+  }
+}
+
+function scrollWeightTo(w, animate) {
+  const inner = document.getElementById('weightScrollInner');
+  const track = document.getElementById('weightTrack');
+  if (!inner || !track) return;
+  const idx = (w - WEIGHT_MIN) / WEIGHT_STEP;
+  const offset = (track.clientWidth / 2) - (idx * TICK_WIDTH) - (TICK_WIDTH / 2);
+  inner.style.transition = animate ? 'transform 0.25s cubic-bezier(0.22,1,0.36,1)' : 'none';
+  inner.style.transform = `translateX(${offset}px)`;
+  // Highlight active tick
+  inner.querySelectorAll('.weight-tick').forEach(t => {
+    t.classList.toggle('active', parseFloat(t.dataset.w) === w);
+  });
+}
+
+function setWeight(w) {
+  w = Math.round(w * 2) / 2; // snap to 0.5
+  w = Math.max(WEIGHT_MIN, Math.min(WEIGHT_MAX, w));
+  currentWeight = w;
+  const valEl = document.getElementById('wVal');
+  if (valEl) {
+    valEl.textContent = w.toFixed(1);
+    valEl.classList.add('bump');
+    setTimeout(() => valEl.classList.remove('bump'), 120);
+  }
+  scrollWeightTo(w, true);
+}
+
+// Touch/mouse drag for weight picker
+(function initWeightDrag() {
+  const track = document.getElementById('weightTrack');
+  if (!track) return;
+  let dragging = false, startX = 0, startWeight = 70;
+
+  function onStart(e) {
+    dragging = true;
+    startX = e.touches ? e.touches[0].clientX : e.clientX;
+    startWeight = currentWeight;
+    track.style.cursor = 'grabbing';
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const dx = startX - x;
+    const dw = dx / TICK_WIDTH * WEIGHT_STEP;
+    setWeight(startWeight + dw);
+  }
+  function onEnd() {
+    dragging = false;
+    track.style.cursor = 'grab';
+  }
+
+  track.addEventListener('mousedown', onStart);
+  track.addEventListener('touchstart', onStart, {passive: true});
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchmove', onMove, {passive: false});
+  window.addEventListener('mouseup', onEnd);
+  window.addEventListener('touchend', onEnd);
+
+  // Mouse wheel support
+  track.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const dir = e.deltaY > 0 ? 1 : -1;
+    setWeight(currentWeight + dir * WEIGHT_STEP);
+  }, {passive: false});
+})();
+
+buildWeightTicks();
+scrollWeightTo(70, false);
+
+// ─── STEPPER FUNCTION (Sleep Hours etc) ────────────────────────────────────────
+function stepTracker(idx, delta) {
+  const el = document.getElementById(`inp-tracker-${idx}`);
+  if (!el) return;
+  let val = parseFloat(el.dataset.value) || 0;
+  val = Math.max(0, Math.min(24, val + delta));
+  val = Math.round(val * 2) / 2; // snap to 0.5
+  el.dataset.value = val;
+  el.textContent = val;
+}
 
 // ─── DAY DETAILS MODAL ─────────────────────────────────────────────────────────
 let detailsKey = '';
@@ -1251,32 +1765,44 @@ function showDayDetails(key) {
   // Logs
   const logDetails = document.getElementById('ddLogDetails');
   const log = data.log || {};
+  const custom = log.custom || {};
   
   const hasWeight = log.weight !== undefined && log.weight !== null && log.weight !== '';
-  const hasMood = log.mood !== undefined && log.mood !== null && log.mood !== '';
-  const hasConf = log.conf !== undefined && log.conf !== null && log.conf !== '';
+  const customEntries = Object.entries(custom).filter(([k, v]) => state.customTrackers.includes(k) && v && v.trim());
   const hasWeakness = log.weakness && log.weakness.trim();
   const hasWin = log.win && log.win.trim();
   const hasNotes = log.notes && log.notes.trim();
 
-  if (!hasWeight && !hasMood && !hasConf && !hasWeakness && !hasWin && !hasNotes) {
+  if (!hasWeight && !customEntries.length && !hasWeakness && !hasWin && !hasNotes) {
     logDetails.innerHTML = `<div class="dd-empty-state">No log entries for this day.</div>`;
   } else {
+    let customStatsHtml = '';
+    const stats = [];
+    if (hasWeight) {
+      stats.push({ label: 'WEIGHT', value: `${log.weight} <span style="font-size:10px">kg</span>`, color: 'var(--accent3)' });
+    }
+    state.customTrackers.forEach((tracker, idx) => {
+      const val = custom[tracker] || '—';
+      const colors = ['var(--accent2)', 'var(--accent)', 'var(--purple)'];
+      const color = colors[idx % colors.length];
+      stats.push({ label: tracker.toUpperCase(), value: escapeHtml(val), color: color });
+    });
+
+    if (stats.length > 0) {
+      customStatsHtml = `
+        <div class="dd-log-grid" style="grid-template-columns: repeat(${stats.length}, 1fr); margin-bottom: 16px;">
+          ${stats.map(s => `
+            <div class="dd-log-stat">
+              <div class="dd-log-lbl">${s.label}</div>
+              <div class="dd-log-val" style="color:${s.color}">${s.value}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
     logDetails.innerHTML = `
-      <div class="dd-log-grid">
-        <div class="dd-log-stat">
-          <div class="dd-log-lbl">WEIGHT</div>
-          <div class="dd-log-val" style="color:var(--accent3)">${hasWeight ? log.weight : '—'} <span style="font-size:10px">kg</span></div>
-        </div>
-        <div class="dd-log-stat">
-          <div class="dd-log-lbl">MOOD</div>
-          <div class="dd-log-val" style="color:var(--accent2)">${hasMood ? log.mood : '—'}<span style="font-size:10px">/10</span></div>
-        </div>
-        <div class="dd-log-stat">
-          <div class="dd-log-lbl">CONFIDENCE</div>
-          <div class="dd-log-val" style="color:var(--accent)">${hasConf ? log.conf : '—'}<span style="font-size:10px">/10</span></div>
-        </div>
-      </div>
+      ${customStatsHtml}
       <div class="dd-log-text-group">
         ${hasWin ? `
           <div class="dd-log-text-item">
@@ -1318,6 +1844,121 @@ function goToDayEdit() {
   showPage('today', document.querySelector('.bn-btn'));
 }
 
+function generateAndPrintReport() {
+  const fromStr = document.getElementById('repFromDate').value;
+  const toStr = document.getElementById('repToDate').value;
+  
+  if (!fromStr || !toStr) {
+    showToast("⚠️ PLEASE SELECT BOTH DATES");
+    return;
+  }
+  
+  const fromDate = new Date(fromStr);
+  const toDate = new Date(toStr);
+  
+  if (fromDate > toDate) {
+    showToast("⚠️ 'FROM' DATE MUST BE BEFORE 'TO' DATE");
+    return;
+  }
+  
+  const keys = Object.keys(state.data).sort();
+  const matchedKeys = keys.filter(k => {
+    const d = parseKey(k);
+    d.setHours(0,0,0,0);
+    const start = new Date(fromDate); start.setHours(0,0,0,0);
+    const end = new Date(toDate); end.setHours(0,0,0,0);
+    return d >= start && d <= end;
+  });
+  
+  if (matchedKeys.length === 0) {
+    showToast("⚠️ NO DATA FOUND IN RANGE");
+    return;
+  }
+  
+  const fmt = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
+  document.getElementById('prDateRange').textContent = `${fmt(fromDate)} - ${fmt(toDate)}`;
+  
+  let totalScore = 0;
+  let loggedDays = 0;
+  let perfectDays = 0;
+  
+  const daysList = document.getElementById('prDaysList');
+  daysList.innerHTML = '';
+  
+  // Set up print headers dynamically
+  const thead = document.getElementById('prThead');
+  const gridTemplate = `2.2fr 1fr ${'1.2fr '.repeat(state.customTrackers.length)}`;
+  thead.style.gridTemplateColumns = gridTemplate;
+  thead.innerHTML = `
+    <div class="pr-col pr-col-date">DATE</div>
+    <div class="pr-col pr-col-score">SCORE</div>
+    ${state.customTrackers.map((tracker, idx) => {
+      const colors = ['var(--accent3)', 'var(--accent2)', 'var(--purple)'];
+      const color = colors[idx % colors.length];
+      return `<div class="pr-col" style="color:${color}">${tracker.toUpperCase()}</div>`;
+    }).join('')}
+  `;
+  
+  matchedKeys.forEach(k => {
+    const data = state.data[k];
+    const score = calcScore(k);
+    const hasAnyHabit = Object.values(data.habits || {}).some(Boolean);
+    const hasLog = data.log && (
+      (data.log.weight !== undefined && data.log.weight !== null && data.log.weight !== '') ||
+      (data.log.weakness && data.log.weakness.trim()) ||
+      (data.log.win && data.log.win.trim()) ||
+      (data.log.notes && data.log.notes.trim()) ||
+      (data.log.custom && Object.values(data.log.custom).some(v => v !== undefined && v !== null && v !== ''))
+    );
+    
+    if (!hasAnyHabit && !hasLog) return;
+    
+    loggedDays++;
+    totalScore += score;
+    if (score === 100) perfectDays++;
+    
+    const d = parseKey(k);
+    const dateFormatted = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
+    
+    const row = document.createElement('div');
+    row.className = 'pr-row';
+    row.style.gridTemplateColumns = gridTemplate;
+    
+    const custom = (data.log || {}).custom || {};
+    const colsHtml = state.customTrackers.map((tracker, idx) => {
+      const val = custom[tracker] || '—';
+      const colors = ['var(--accent3)', 'var(--accent2)', 'var(--purple)'];
+      const color = colors[idx % colors.length];
+      return `<div class="pr-col" style="color:${color}; font-family: 'DM Mono', monospace;">${escapeHtml(val)}</div>`;
+    }).join('');
+    
+    row.innerHTML = `
+      <div class="pr-col pr-col-date">${dateFormatted}</div>
+      <div class="pr-col pr-col-score">${score}%</div>
+      ${colsHtml}
+    `;
+    daysList.appendChild(row);
+  });
+  
+  if (loggedDays === 0) {
+    showToast("⚠️ NO DATA FOUND IN RANGE");
+    return;
+  }
+  
+  const avgScoreVal = Math.round(totalScore / loggedDays);
+  document.getElementById('prAvgScore').textContent = `${avgScoreVal}%`;
+  document.getElementById('prDaysLogged').textContent = loggedDays;
+  document.getElementById('prPerfectDays').textContent = perfectDays;
+  
+  document.body.classList.add('printing-report');
+  window.print();
+}
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing-details');
+  document.body.classList.remove('printing-report');
+});
+
 // ─── FUEL ──────────────────────────────────────────────────────────────────────
 function renderFuel() {
   const el = document.getElementById('fuelList');
@@ -1332,39 +1973,76 @@ function renderFuel() {
 }
 
 // ─── SETTINGS ──────────────────────────────────────────────────────────────────
-function toggleDangerZone() {
-  const content = document.getElementById('dangerZoneContent');
-  const arrow = document.getElementById('dangerZoneArrow');
-  const isHidden = content.style.display === 'none';
-  if (isHidden) {
-    content.style.display = 'block';
-    arrow.textContent = 'TAP TO HIDE ▾';
-    arrow.style.color = '#ff5555';
-  } else {
-    content.style.display = 'none';
-    arrow.textContent = 'TAP TO SHOW ›';
-    arrow.style.color = 'var(--subtext)';
-  }
-}
 
-function saveName() {
-  state.name = document.getElementById('nameInp').value || 'Ashmil';
-  save(); 
-  showToast(`Hey ${state.name} 👋`);
-  syncFromCloud();
-}
-function resetAll() {
-  if (!confirm('Delete ALL data? Cannot undo.')) return;
-  state.data = {}; save();
-  viewKey = todayKey();
-  init(); showToast('Fresh start. Go. 🔥');
-}
 
 function refreshApp() {
   showPage('today', document.querySelector('.bn-btn'));
   selectDate(todayKey());
   syncFromCloud();
   showToast("⚡ REFRESHED");
+}
+
+// ─── CUSTOM TRACKERS SETTINGS ──────────────────────────────────────────────────
+function renderCustomTrackersList() {
+  const listEl = document.getElementById('customTrackersList');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+  
+  if (state.customTrackers.length === 0) {
+    listEl.innerHTML = `
+      <div style="font-family: var(--fm); font-size: 11px; color: var(--subtext); padding: 6px 0;">
+        No active trackers. Add one below!
+      </div>
+    `;
+    return;
+  }
+  
+  state.customTrackers.forEach((tracker, idx) => {
+    const item = document.createElement('div');
+    item.className = 'set-item';
+    item.style.padding = '10px 14px';
+    item.style.marginBottom = '6px';
+    item.innerHTML = `
+      <div>
+        <div class="set-name">${tracker}</div>
+      </div>
+      <button class="small-btn sb-danger" onclick="deleteCustomTracker(${idx})" style="padding: 6px 12px; font-size: 11px;">DELETE</button>
+    `;
+    listEl.appendChild(item);
+  });
+}
+
+function addCustomTracker() {
+  const inp = document.getElementById('newTrackerInp');
+  const val = inp.value.trim();
+  if (!val) {
+    showToast("⚠️ ENTER A TRACKER NAME");
+    return;
+  }
+  if (state.customTrackers.includes(val)) {
+    showToast("⚠️ TRACKER ALREADY EXISTS");
+    return;
+  }
+  if (state.customTrackers.length >= 3) {
+    showToast("⚠️ MAX 3 TRACKERS ALLOWED");
+    return;
+  }
+  state.customTrackers.push(val);
+  save();
+  inp.value = '';
+  renderCustomTrackersList();
+  renderCustomTrackersLogFields();
+  showToast(`✅ ADDED ${val.toUpperCase()}`);
+}
+
+function deleteCustomTracker(idx) {
+  const name = state.customTrackers[idx];
+  if (!confirm(`Delete tracker "${name}"? This won't delete past logged values but will hide them from the log page.`)) return;
+  state.customTrackers.splice(idx, 1);
+  save();
+  renderCustomTrackersList();
+  renderCustomTrackersLogFields();
+  showToast(`❌ DELETED ${name.toUpperCase()}`);
 }
 
 // ─── NAV ───────────────────────────────────────────────────────────────────────
