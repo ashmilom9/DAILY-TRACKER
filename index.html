@@ -603,21 +603,28 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 
 @media print {
   @page {
-    margin: 0;
+    size: landscape;
+    margin: 8mm;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
   html, body {
     background: #080808 !important;
     background-color: #080808 !important;
     color: #efefef !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    min-height: 100% !important;
-    height: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
     overflow: visible !important;
+    font-size: 12px !important;
   }
   
+  /* Hide everything except the report */
   body.printing-report #app,
   body.printing-report #datePicker,
   body.printing-report #dayDetails,
@@ -627,48 +634,95 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
     display: none !important;
   }
   
+  /* Force the report to fill the page */
   body.printing-report #printReportArea {
     display: block !important;
     background: #080808 !important;
-    background-color: #080808 !important;
     color: #efefef !important;
-    padding: 30px !important;
-    min-height: 100% !important;
-    height: auto !important;
+    padding: 20px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
     box-sizing: border-box !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    overflow: visible !important;
+  }
+
+  /* Header */
+  body.printing-report .pr-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    border-bottom: 2px solid #333 !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 15px !important;
+  }
+  body.printing-report .pr-title {
+    font-size: 28px !important;
+    color: #c8f55a !important;
+  }
+  body.printing-report .pr-subtitle {
+    font-size: 10px !important;
+    color: #999 !important;
   }
   
+  /* Stats grid */
+  body.printing-report .pr-stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 10px !important;
+    margin-bottom: 15px !important;
+  }
   body.printing-report .pr-stat-card {
     background: #141414 !important;
-    border: 1px solid #202020 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    border: 1px solid #252525 !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    text-align: center !important;
   }
+  body.printing-report .pr-stat-lbl {
+    font-size: 8px !important;
+    color: #888 !important;
+  }
+  body.printing-report .pr-stat-val {
+    font-size: 24px !important;
+    color: #efefef !important;
+  }
+
+  /* Table — force consistent grid */
   body.printing-report .pr-table {
+    width: 100% !important;
     background: #101010 !important;
-    border: 1px solid #202020 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    border: 1px solid #252525 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    table-layout: fixed !important;
   }
   body.printing-report .pr-row {
-    border-bottom: 1px solid #202020 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    display: grid !important;
+    border-bottom: 1px solid #1a1a1a !important;
+    padding: 8px 10px !important;
+    align-items: center !important;
+    font-size: 11px !important;
+    word-break: break-word !important;
+  }
+  body.printing-report .pr-row:last-child {
+    border-bottom: none !important;
   }
   body.printing-report .pr-thead {
-    background: #141414 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    background: #161616 !important;
+    font-size: 9px !important;
+    font-weight: bold !important;
+    color: #888 !important;
   }
   body.printing-report .pr-tbody .pr-row:nth-child(even) {
     background: #121212 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
   }
-  body.printing-report .pr-title {
+  body.printing-report .pr-col-date {
+    font-size: 10px !important;
+  }
+  body.printing-report .pr-col-score {
     color: #c8f55a !important;
+    font-weight: bold !important;
   }
 }
 </style>
@@ -1950,13 +2004,25 @@ function generateAndPrintReport() {
   document.getElementById('prDaysLogged').textContent = loggedDays;
   document.getElementById('prPerfectDays').textContent = perfectDays;
   
+  // Force desktop-width viewport for consistent print on mobile
+  const vpMeta = document.querySelector('meta[name="viewport"]');
+  const originalVP = vpMeta ? vpMeta.getAttribute('content') : '';
+  if (vpMeta) vpMeta.setAttribute('content', 'width=1200');
+  
   document.body.classList.add('printing-report');
-  window.print();
+  
+  // Small delay to let the layout render before print dialog
+  setTimeout(() => {
+    window.print();
+  }, 300);
 }
 
 window.addEventListener('afterprint', () => {
   document.body.classList.remove('printing-details');
   document.body.classList.remove('printing-report');
+  // Restore original viewport
+  const vpMeta = document.querySelector('meta[name="viewport"]');
+  if (vpMeta) vpMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
 });
 
 // ─── FUEL ──────────────────────────────────────────────────────────────────────
