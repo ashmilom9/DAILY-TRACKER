@@ -496,6 +496,122 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 
 .dd-actions { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; flex-shrink:0; }
 
+/* ─── NAMAZ TRACKER ───────────────────────────────────────────────────────────── */
+.namaz-hero {
+  background: linear-gradient(135deg, var(--card) 0%, #0d0e15 100%) !important;
+}
+.namaz-hero::before {
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 70%) !important;
+}
+.prayer-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  user-select: none;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.prayer-card.pc-on-time {
+  background: #0e1600;
+  border-color: rgba(200,245,90,0.15);
+}
+.prayer-card.pc-late {
+  background: #170c06;
+  border-color: rgba(245,133,90,0.15);
+}
+.prayer-card.pc-missed {
+  background: #1a0808;
+  border-color: rgba(255,85,85,0.12);
+}
+.prayer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.prayer-name-time {
+  display: flex;
+  flex-direction: column;
+}
+.prayer-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+.prayer-time {
+  font-family: var(--fm);
+  font-size: 9px;
+  color: var(--subtext);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+.prayer-actions {
+  display: flex;
+  gap: 4px;
+}
+.prayer-btn {
+  font-family: var(--fm);
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.prayer-btn:hover {
+  border-color: var(--subtext);
+  color: var(--subtext);
+}
+/* Active button states */
+.prayer-btn.act-on-time.active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+  font-weight: bold;
+}
+.prayer-btn.act-late.active {
+  background: var(--accent3);
+  color: #000;
+  border-color: var(--accent3);
+  font-weight: bold;
+}
+.prayer-btn.act-missed.active {
+  background: #ff5555;
+  color: #fff;
+  border-color: #ff5555;
+  font-weight: bold;
+}
+
+/* Custom circles for checkboxes */
+.prayer-card .hcheck {
+  border-radius: 50%;
+  cursor: pointer;
+}
+.prayer-card .hcheck.c-on-time {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #000;
+}
+.prayer-card .hcheck.c-late {
+  border-color: var(--accent3);
+  background: var(--accent3);
+  color: #000;
+}
+.prayer-card .hcheck.c-missed {
+  border-color: #ff5555;
+  background: #ff5555;
+  color: #fff;
+}
+
 /* ─── PRINT SYSTEM ────────────────────────────────────────────────────────────── */
 #printReportArea { display: none; }
 
@@ -604,7 +720,7 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
 @media print {
   @page {
     size: landscape;
-    margin: 8mm;
+    margin: 0;
   }
   * {
     -webkit-print-color-adjust: exact !important;
@@ -639,7 +755,7 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
     display: block !important;
     background: #080808 !important;
     color: #efefef !important;
-    padding: 20px !important;
+    padding: 12mm !important;
     width: 100% !important;
     min-width: 0 !important;
     max-width: none !important;
@@ -1005,6 +1121,72 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
       </div>
     </div>
 
+    <!-- NAMAZ -->
+    <div class="page" id="page-namaz">
+      <!-- Namaz Hero Streak Card -->
+      <div class="hero-card namaz-hero">
+        <div style="font-family:var(--fm);font-size:9px;color:var(--subtext);letter-spacing:3px;margin-bottom:6px;">🕌 PRAYER STREAK</div>
+        <div class="streak-num" id="namazStreak">0</div>
+        <div class="streak-lbl">CONSECUTIVE DAYS WITH ALL PRAYERS</div>
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="ms-val" id="namazWeekly">0%</div><div class="ms-lbl">WEEKLY COMP.</div></div>
+          <div class="mini-stat"><div class="ms-val" id="namazMonthly">0%</div><div class="ms-lbl">MONTHLY COMP.</div></div>
+          <div class="mini-stat"><div class="ms-val" id="namazBestStreak">0</div><div class="ms-lbl">BEST STREAK</div></div>
+        </div>
+      </div>
+
+      <!-- Prayer List Container -->
+      <div class="sec-head" style="margin-top:0">
+        <div class="sec-title" id="namazListTitle">DAILY PRAYERS</div>
+        <div class="sec-badge badge-habits" id="namazDateLabel">—</div>
+      </div>
+      
+      <div class="habit-list" id="namazList">
+        <!-- Dynamically loaded prayer cards -->
+      </div>
+
+      <!-- Namaz Settings Card -->
+      <div class="log-card" style="margin-top:20px; padding: 16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleNamazSettingsExpand()">
+          <span style="font-family:var(--fm); font-size:9px; color:var(--subtext); letter-spacing:2px; text-transform:uppercase;">📍 LOCATION & SETTINGS</span>
+          <span id="namazSettingsArrow" style="font-size: 12px; color: var(--subtext);">▼</span>
+        </div>
+        <div id="namazSettingsBody" style="display: none; flex-direction: column; gap: 14px; margin-top: 10px;">
+          <!-- Latitude/Longitude display -->
+          <div style="display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 14px;">
+            <div>
+              <div style="font-family:var(--fm); font-size:9px; color:var(--subtext); text-transform:uppercase; letter-spacing:1px;">Detected Location</div>
+              <div id="namazCoordsDisplay" style="font-family:var(--fm); font-size:11px; color:var(--accent); margin-top:4px;">Loading...</div>
+            </div>
+            <button class="small-btn sb-accent" onclick="detectNamazLocation()">DETECT</button>
+          </div>
+
+          <!-- Calculation Method & Juristic School -->
+          <div class="log-grid" style="grid-template-columns: 1fr; gap: 12px; margin-bottom: 0;">
+            <div class="lf">
+              <label>Calculation Method</label>
+              <select id="namazMethodSelect" onchange="changeNamazMethod(this.value)" style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text); font-family:var(--fb); font-size:13px; width:100%; outline:none;">
+                <option value="2">ISNA (North America)</option>
+                <option value="3">Muslim World League (MWL)</option>
+                <option value="4">Umm Al-Qura (Makkah)</option>
+                <option value="5">Egyptian General Authority</option>
+                <option value="1">University of Islamic Sciences, Karachi</option>
+                <option value="15">Moonsighting Committee</option>
+                <option value="9">University of Tehran</option>
+              </select>
+            </div>
+            <div class="lf" style="margin-bottom: 0;">
+              <label>Asr Calculation (Juristic School)</label>
+              <select id="namazSchoolSelect" onchange="changeNamazSchool(this.value)" style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text); font-family:var(--fb); font-size:13px; width:100%; outline:none;">
+                <option value="0">Standard (Shafi, Maliki, Hanbali)</option>
+                <option value="1">Hanafi</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /pages -->
 
   <!-- BOTTOM NAV -->
@@ -1012,6 +1194,10 @@ input[type=range].r-conf::-webkit-slider-thumb { -webkit-appearance:none; appear
     <button class="bn-btn active" onclick="showPage('today',this)">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       Today
+    </button>
+    <button class="bn-btn" onclick="showPage('namaz',this)">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2v3M12 5a6 6 0 0 1 6 6v7H6v-7a6 6 0 0 1 6-6zM3 18h18M5 18v3h14v-3"/></svg>
+      Namaz
     </button>
     <button class="bn-btn" onclick="showPage('stats',this)">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>
@@ -1155,6 +1341,16 @@ let state = JSON.parse(localStorage.getItem('rise2_state') || '{}');
 if (!state.data) state.data = {}; // keyed by "YYYY-MM-DD"
 state.name = 'Ashmil Omar'; // Single permanent user
 if (!state.customTrackers) state.customTrackers = ['Gym', 'Sleep Hours', 'Deep Work'];
+if (!state.namazSettings) {
+  state.namazSettings = {
+    latitude: 28.6139,
+    longitude: 77.2090,
+    cityName: 'New Delhi (Default)',
+    method: 2, // ISNA
+    school: 0  // Shafi
+  };
+}
+if (!state.namazTimesCache) state.namazTimesCache = {};
 
 function save() {
   localStorage.setItem('rise2_state', JSON.stringify(state));
@@ -1174,6 +1370,16 @@ function syncFromCloud() {
         if (cloudState && cloudState.data) {
           state = cloudState;
           if (!state.customTrackers) state.customTrackers = ['Gym', 'Sleep Hours', 'Deep Work'];
+          if (!state.namazSettings) {
+            state.namazSettings = {
+              latitude: 28.6139,
+              longitude: 77.2090,
+              cityName: 'New Delhi (Default)',
+              method: 2,
+              school: 0
+            };
+          }
+          if (!state.namazTimesCache) state.namazTimesCache = {};
           localStorage.setItem('rise2_state', JSON.stringify(state));
           
           renderHabits();
@@ -1181,6 +1387,7 @@ function syncFromCloud() {
           renderHeatmap();
           loadLog();
           renderCustomTrackersList();
+          renderNamaz();
           
           showToast("☁️ Cloud sync complete");
         }
@@ -1239,6 +1446,7 @@ function init() {
   if (profileDisplay) {
     profileDisplay.textContent = state.name.toUpperCase();
   }
+  renderNamaz();
   syncFromCloud();
 }
 
@@ -1305,13 +1513,38 @@ function renderList(listId, arr, cat, data, isFuture) {
 function toggleHabit(id, cat) {
   const data = getDay(viewKey);
   data.habits[id] = !data.habits[id];
+  
+  let didChangeLinked = false;
+  // Two-way binding for Fajr
+  if (id === 'subh') {
+    if (!data.namaz) data.namaz = {};
+    data.namaz['fajr'] = data.habits['subh'] ? 'on_time' : 'unprayed';
+    data.habits['woke_subh'] = data.habits['subh'];
+    didChangeLinked = true;
+  } else if (id === 'woke_subh') {
+    if (!data.namaz) data.namaz = {};
+    if (data.habits['woke_subh']) {
+      data.habits['subh'] = true;
+      data.namaz['fajr'] = 'on_time';
+      didChangeLinked = true;
+    }
+  }
+  
   save();
 
-  const card = document.getElementById(`hcard-${id}`);
-  const done = data.habits[id];
-  card.classList.toggle('done', done);
-  card.querySelector('.hcheck').textContent = done ? '✓' : '';
+  if (didChangeLinked) {
+    renderHabits();
+  } else {
+    const card = document.getElementById(`hcard-${id}`);
+    const done = data.habits[id];
+    if (card) {
+      card.classList.toggle('done', done);
+      const chk = card.querySelector('.hcheck');
+      if (chk) chk.textContent = done ? '✓' : '';
+    }
+  }
 
+  const done = data.habits[id];
   if (done && navigator.vibrate) navigator.vibrate(25);
 
   updateBadges(data);
@@ -1533,6 +1766,7 @@ function selectDate(key) {
   renderHabits();
   loadLog();
   updateLogLabel();
+  renderNamaz();
 }
 
 // ─── LOG ───────────────────────────────────────────────────────────────────────
@@ -1941,11 +2175,12 @@ function generateAndPrintReport() {
   
   // Set up print headers dynamically
   const thead = document.getElementById('prThead');
-  const gridTemplate = `2.2fr 1fr ${'1.2fr '.repeat(state.customTrackers.length)}`;
+  const gridTemplate = `2.2fr 1fr 1.2fr ${'1.2fr '.repeat(state.customTrackers.length)}`;
   thead.style.gridTemplateColumns = gridTemplate;
   thead.innerHTML = `
     <div class="pr-col pr-col-date">DATE</div>
     <div class="pr-col pr-col-score">SCORE</div>
+    <div class="pr-col" style="color:var(--accent2)">NAMAZ</div>
     ${state.customTrackers.map((tracker, idx) => {
       const colors = ['var(--accent3)', 'var(--accent2)', 'var(--purple)'];
       const color = colors[idx % colors.length];
@@ -1964,8 +2199,9 @@ function generateAndPrintReport() {
       (data.log.notes && data.log.notes.trim()) ||
       (data.log.custom && Object.values(data.log.custom).some(v => v !== undefined && v !== null && v !== ''))
     );
+    const hasNamaz = data.namaz && Object.values(data.namaz).some(v => v && v !== 'unprayed');
     
-    if (!hasAnyHabit && !hasLog) return;
+    if (!hasAnyHabit && !hasLog && !hasNamaz) return;
     
     loggedDays++;
     totalScore += score;
@@ -1978,6 +2214,16 @@ function generateAndPrintReport() {
     row.className = 'pr-row';
     row.style.gridTemplateColumns = gridTemplate;
     
+    let namazCount = 0;
+    if (data && data.namaz) {
+      PRAYERS.forEach(p => {
+        const status = data.namaz[p.id];
+        if (status === 'on_time' || status === 'late') {
+          namazCount++;
+        }
+      });
+    }
+    
     const custom = (data.log || {}).custom || {};
     const colsHtml = state.customTrackers.map((tracker, idx) => {
       const val = custom[tracker] || '—';
@@ -1989,6 +2235,7 @@ function generateAndPrintReport() {
     row.innerHTML = `
       <div class="pr-col pr-col-date">${dateFormatted}</div>
       <div class="pr-col pr-col-score">${score}%</div>
+      <div class="pr-col" style="color:var(--accent2); font-family: 'DM Mono', monospace;">${namazCount}/5</div>
       ${colsHtml}
     `;
     daysList.appendChild(row);
@@ -2111,6 +2358,397 @@ function deleteCustomTracker(idx) {
   showToast(`❌ DELETED ${name.toUpperCase()}`);
 }
 
+// ─── NAMAZ TRACKER FUNCTIONS ───────────────────────────────────────────────────
+const PRAYERS = [
+  { id: 'fajr', name: 'Fajr', key: 'Fajr', emoji: '🌅' },
+  { id: 'dhuhr', name: 'Dhuhr', key: 'Dhuhr', emoji: '☀️' },
+  { id: 'asr', name: 'Asr', key: 'Asr', emoji: '⛅' },
+  { id: 'maghrib', name: 'Maghrib', key: 'Maghrib', emoji: '🌇' },
+  { id: 'isha', name: 'Isha', key: 'Isha', emoji: '🌌' }
+];
+
+function formatTime12h(timeStr) {
+  if (!timeStr) return '';
+  const cleanTime = timeStr.split(' ')[0];
+  const parts = cleanTime.split(':');
+  if (parts.length < 2) return timeStr;
+  const h = parseInt(parts[0]);
+  const m = parts[1];
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  return `${h12}:${m} ${ampm}`;
+}
+
+function fetchPrayerTimes(key, callback) {
+  if (state.namazTimesCache[key]) {
+    if (callback) callback(state.namazTimesCache[key]);
+    return;
+  }
+
+  const dateObj = parseKey(key);
+  const DD = String(dateObj.getDate()).padStart(2, '0');
+  const MM = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const YYYY = dateObj.getFullYear();
+  const dateParam = `${DD}-${MM}-${YYYY}`;
+  
+  const lat = state.namazSettings.latitude;
+  const lon = state.namazSettings.longitude;
+  const method = state.namazSettings.method;
+  const school = state.namazSettings.school;
+  
+  const url = `https://api.aladhan.com/v1/timings/${dateParam}?latitude=${lat}&longitude=${lon}&method=${method}&school=${school}`;
+  
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.code === 200 && data.data && data.data.timings) {
+        const t = data.data.timings;
+        const timings = {
+          Fajr: t.Fajr,
+          Dhuhr: t.Dhuhr,
+          Asr: t.Asr,
+          Maghrib: t.Maghrib,
+          Isha: t.Isha,
+          timezone: data.data.meta.timezone || 'UTC'
+        };
+        state.namazTimesCache[key] = timings;
+        save();
+        if (callback) callback(timings);
+      } else {
+        throw new Error("Invalid API response");
+      }
+    })
+    .catch(err => {
+      console.warn("Namaz API failed, using fallback:", err);
+      const fallback = {
+        Fajr: "04:30",
+        Dhuhr: "12:30",
+        Asr: school === 1 ? "16:30" : "15:45",
+        Maghrib: "18:45",
+        Isha: "20:15",
+        timezone: "UTC (Fallback)",
+        isFallback: true
+      };
+      if (callback) callback(fallback);
+    });
+}
+
+function renderNamaz() {
+  const listEl = document.getElementById('namazList');
+  if (!listEl) return;
+  
+  const d = parseKey(viewKey);
+  const isFuture = viewKey > todayKey();
+  
+  // Date Label
+  const labelEl = document.getElementById('namazDateLabel');
+  if (labelEl) {
+    labelEl.textContent = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }).toUpperCase();
+  }
+    
+  // Coords display
+  const coordsDisplay = document.getElementById('namazCoordsDisplay');
+  if (coordsDisplay) {
+    coordsDisplay.textContent = `${state.namazSettings.latitude.toFixed(4)}, ${state.namazSettings.longitude.toFixed(4)} (${state.namazSettings.cityName})`;
+  }
+  
+  // Method/School selector value syncing
+  const methodSelect = document.getElementById('namazMethodSelect');
+  if (methodSelect) methodSelect.value = state.namazSettings.method;
+  const schoolSelect = document.getElementById('namazSchoolSelect');
+  if (schoolSelect) schoolSelect.value = state.namazSettings.school;
+
+  // Render loading state
+  listEl.innerHTML = `
+    <div style="font-family: var(--fm); font-size: 11px; color: var(--subtext); text-align: center; padding: 20px 0;">
+      ⚡ FETCHING PRAYER TIMES...
+    </div>
+  `;
+  
+  // Update stats
+  updateNamazStats();
+  
+  fetchPrayerTimes(viewKey, (timings) => {
+    listEl.innerHTML = '';
+    
+    // Update Coords timezone if available
+    if (coordsDisplay && timings.timezone) {
+      coordsDisplay.textContent = `${state.namazSettings.latitude.toFixed(4)}, ${state.namazSettings.longitude.toFixed(4)} (${timings.timezone})`;
+    }
+    
+    const dayData = getDay(viewKey);
+    if (!dayData.namaz) dayData.namaz = {};
+    
+    PRAYERS.forEach(p => {
+      const status = dayData.namaz[p.id] || 'unprayed'; // 'unprayed', 'on_time', 'late', 'missed'
+      const timeStr = timings[p.key] || '—';
+      const formattedTime = formatTime12h(timeStr);
+      
+      const card = document.createElement('div');
+      card.className = `prayer-card pc-${status}`;
+      card.id = `prayer-card-${p.id}`;
+      
+      // Determine checkbox class & symbol
+      let checkClass = '';
+      let checkSymbol = '';
+      if (status === 'on_time') { checkClass = 'c-on-time'; checkSymbol = '✓'; }
+      else if (status === 'late') { checkClass = 'c-late'; checkSymbol = '✓'; }
+      else if (status === 'missed') { checkClass = 'c-missed'; checkSymbol = '✗'; }
+      
+      card.innerHTML = `
+        <div class="prayer-info" onclick="toggleNamaz('${p.id}')" style="cursor: pointer;">
+          <div class="hcheck ${checkClass}">${checkSymbol}</div>
+          <div class="prayer-name-time">
+            <span class="prayer-name">${p.emoji} ${p.name}</span>
+            <span class="prayer-time">${formattedTime}</span>
+          </div>
+        </div>
+        <div class="prayer-actions">
+          <button class="prayer-btn act-on-time ${status === 'on_time' ? 'active' : ''}" onclick="setNamazStatus('${p.id}', 'on_time')">On Time</button>
+          <button class="prayer-btn act-late ${status === 'late' ? 'active' : ''}" onclick="setNamazStatus('${p.id}', 'late')">Late</button>
+          <button class="prayer-btn act-missed ${status === 'missed' ? 'active' : ''}" onclick="setNamazStatus('${p.id}', 'missed')">Missed</button>
+        </div>
+      `;
+      
+      if (isFuture) {
+        card.style.opacity = '0.4';
+        card.style.pointerEvents = 'none';
+      }
+      
+      listEl.appendChild(card);
+    });
+  });
+}
+
+function toggleNamaz(id) {
+  const dayData = getDay(viewKey);
+  if (!dayData.namaz) dayData.namaz = {};
+  const current = dayData.namaz[id] || 'unprayed';
+  
+  if (current === 'on_time' || current === 'late' || current === 'missed') {
+    setNamazStatus(id, 'unprayed');
+  } else {
+    setNamazStatus(id, 'on_time');
+  }
+}
+
+function setNamazStatus(id, status) {
+  if (viewKey > todayKey()) { showToast("Can't track future prayers!"); return; }
+  const dayData = getDay(viewKey);
+  if (!dayData.namaz) dayData.namaz = {};
+  
+  const current = dayData.namaz[id] || 'unprayed';
+  if (current === status) {
+    status = 'unprayed';
+  }
+  
+  dayData.namaz[id] = status;
+  
+  // Smart Habits Integration: Fajr -> Subh Prayer habit
+  if (id === 'fajr') {
+    if (!dayData.habits) dayData.habits = {};
+    if (status === 'on_time' || status === 'late') {
+      dayData.habits['subh'] = true;
+      if (status === 'on_time') {
+        dayData.habits['woke_subh'] = true;
+      } else {
+        dayData.habits['woke_subh'] = false;
+      }
+    } else {
+      dayData.habits['subh'] = false;
+      dayData.habits['woke_subh'] = false;
+    }
+    renderHabits();
+  }
+  
+  save();
+  
+  if (status !== 'unprayed' && navigator.vibrate) navigator.vibrate(25);
+  
+  renderNamaz();
+  updateStats();
+  renderHeatmap();
+}
+
+function allPrayersDone(k) {
+  const d = state.data[k];
+  if (!d || !d.namaz) return false;
+  return PRAYERS.every(p => {
+    const status = d.namaz[p.id];
+    return status === 'on_time' || status === 'late';
+  });
+}
+
+function updateNamazStats() {
+  const keys = Object.keys(state.data).sort();
+  const today = todayKey();
+  
+  // Streak tracking
+  let streak = 0;
+  let checkDate = new Date();
+  let checkKey = dateKey(checkDate);
+  
+  if (allPrayersDone(checkKey)) {
+    streak = 1;
+    while (true) {
+      checkDate.setDate(checkDate.getDate() - 1);
+      checkKey = dateKey(checkDate);
+      if (allPrayersDone(checkKey)) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+  } else {
+    checkDate.setDate(checkDate.getDate() - 1);
+    checkKey = dateKey(checkDate);
+    if (allPrayersDone(checkKey)) {
+      streak = 1;
+      while (true) {
+        checkDate.setDate(checkDate.getDate() - 1);
+        checkKey = dateKey(checkDate);
+        if (allPrayersDone(checkKey)) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+    }
+  }
+  
+  // Best Streak
+  let bestStreak = 0;
+  let tempStreak = 0;
+  let prevDate = null;
+  keys.forEach(k => {
+    if (k > today) return;
+    if (allPrayersDone(k)) {
+      if (prevDate) {
+        const diffDays = Math.round((parseKey(k) - prevDate) / 86400000);
+        if (diffDays === 1) {
+          tempStreak++;
+        } else if (diffDays > 1) {
+          tempStreak = 1;
+        }
+      } else {
+        tempStreak = 1;
+      }
+      bestStreak = Math.max(bestStreak, tempStreak);
+      prevDate = parseKey(k);
+    } else {
+      const hasAny = Object.values(state.data[k]?.habits || {}).some(Boolean);
+      if (hasAny) {
+        tempStreak = 0;
+        prevDate = null;
+      }
+    }
+  });
+  
+  // Weekly & Monthly completion percentage
+  let weeklyCompleted = 0;
+  let monthlyCompleted = 0;
+  
+  for (let i = 0; i < 7; i++) {
+    const k = getDateKeyWithOffset(today, -i);
+    const dayData = state.data[k];
+    if (dayData && dayData.namaz) {
+      PRAYERS.forEach(p => {
+        const status = dayData.namaz[p.id];
+        if (status === 'on_time' || status === 'late') {
+          weeklyCompleted++;
+        }
+      });
+    }
+  }
+  
+  for (let i = 0; i < 30; i++) {
+    const k = getDateKeyWithOffset(today, -i);
+    const dayData = state.data[k];
+    if (dayData && dayData.namaz) {
+      PRAYERS.forEach(p => {
+        const status = dayData.namaz[p.id];
+        if (status === 'on_time' || status === 'late') {
+          monthlyCompleted++;
+        }
+      });
+    }
+  }
+  
+  const weeklyPct = Math.round((weeklyCompleted / 35) * 100);
+  const monthlyPct = Math.round((monthlyCompleted / 150) * 100);
+  
+  const namazStreakEl = document.getElementById('namazStreak');
+  if (namazStreakEl) namazStreakEl.textContent = streak;
+  
+  const namazWeeklyEl = document.getElementById('namazWeekly');
+  if (namazWeeklyEl) namazWeeklyEl.textContent = `${weeklyPct}%`;
+  
+  const namazMonthlyEl = document.getElementById('namazMonthly');
+  if (namazMonthlyEl) namazMonthlyEl.textContent = `${monthlyPct}%`;
+  
+  const namazBestStreakEl = document.getElementById('namazBestStreak');
+  if (namazBestStreakEl) namazBestStreakEl.textContent = bestStreak;
+}
+
+function getDateKeyWithOffset(baseDateStr, offset) {
+  const d = parseKey(baseDateStr);
+  d.setDate(d.getDate() + offset);
+  return dateKey(d);
+}
+
+function detectNamazLocation() {
+  if (!navigator.geolocation) {
+    showToast("⚠️ Geolocation not supported by browser");
+    return;
+  }
+  showToast("📍 DETECTING LOCATION...");
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      state.namazSettings.latitude = lat;
+      state.namazSettings.longitude = lon;
+      state.namazSettings.cityName = "Auto-Detected";
+      state.namazTimesCache = {};
+      save();
+      showToast("📍 Location updated!");
+      renderNamaz();
+    },
+    error => {
+      console.error("Geolocation error:", error);
+      showToast("⚠️ Geolocation failed. Using default.");
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+}
+
+function changeNamazMethod(val) {
+  state.namazSettings.method = parseInt(val);
+  state.namazTimesCache = {};
+  save();
+  showToast("Method updated. Refreshing...");
+  renderNamaz();
+}
+
+function changeNamazSchool(val) {
+  state.namazSettings.school = parseInt(val);
+  state.namazTimesCache = {};
+  save();
+  showToast("School updated. Refreshing...");
+  renderNamaz();
+}
+
+let namazSettingsExpanded = false;
+function toggleNamazSettingsExpand() {
+  namazSettingsExpanded = !namazSettingsExpanded;
+  const body = document.getElementById('namazSettingsBody');
+  const arrow = document.getElementById('namazSettingsArrow');
+  if (body && arrow) {
+    body.style.display = namazSettingsExpanded ? 'flex' : 'none';
+    arrow.textContent = namazSettingsExpanded ? '▲' : '▼';
+  }
+}
+
 // ─── NAV ───────────────────────────────────────────────────────────────────────
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2119,6 +2757,7 @@ function showPage(id, btn) {
   if (btn) btn.classList.add('active');
   if (id === 'stats') { updateStats(); renderHeatmap(); }
   if (id === 'log') loadLog();
+  if (id === 'namaz') renderNamaz();
 }
 
 // ─── HELPERS ───────────────────────────────────────────────────────────────────
